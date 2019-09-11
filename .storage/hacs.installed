@@ -1,0 +1,55 @@
+{
+    "data": {
+        "custom-components/sensor.rpi_power": {
+            "version_type": "version",
+            "version_installed": "0.1.5",
+            "version_available": "0.1.5"
+        },
+        "custom-cards/vertical-stack-in-card": {
+            "version_type": "version",
+            "version_installed": "v0.1.3",
+            "version_available": "v0.1.3"
+        },
+        "custom-cards/bar-card": {
+            "version_type": "version",
+            "version_installed": "1.6.1",
+            "version_available": "1.6.1"
+        },
+        "maykar/lovelace-swipe-navigation": {
+            "version_type": "version",
+            "version_installed": "1.2.1",
+            "version_available": "1.2.1"
+        },
+        "kalkih/mini-graph-card": {
+            "version_type": "version",
+            "version_installed": "v0.6.0",
+            "version_available": "v0.6.0"
+        },
+        "thomasloven/lovelace-slider-entity-row": {
+            "version_type": "version",
+            "version_installed": "7",
+            "version_available": "7"
+        },
+        "thomasloven/lovelace-fold-entity-row": {
+            "version_type": "version",
+            "version_installed": "6",
+            "version_available": "6"
+        },
+        "CyrisXD/love-lock-card": {
+            "version_type": "commit",
+            "version_installed": "a63e851",
+            "version_available": "a63e851"
+        },
+        "pilotak/homeassistant-clientraw": {
+            "version_type": "version",
+            "version_installed": "1.0.0",
+            "version_available": "1.0.0"
+        },
+        "pilotak/homeassistant-attributes": {
+            "version_type": "version",
+            "version_installed": "1.0.0",
+            "version_available": "1.0.0"
+        }
+    },
+    "schema": "5"
+}

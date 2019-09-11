@@ -1,0 +1,26 @@
+mysensors:
+  gateways:
+    - device: !secret mysensors_ip
+      persistence_file: 'mysensors24.json'
+      tcp_port: 5003
+    - device: !secret mysensors868_ip
+      persistence_file: 'mysensors868.json'
+      tcp_port: 5003
+  optimistic: false
+  persistence: true
+  retain: true
+  version: '2.1'
+
+sensor:
+  - platform: mysensors
+
+  - platform: attributes
+    friendly_name: "Batteries"
+    attribute: battery_level
+    unit_of_measurement: "%"
+    entities:
+      - sensor.myslipotemp_1_0
+      - sensor.myslipotemp_2_0
+      - sensor.myslipotemp_3_0
+      - sensor.myslipotemp_4_0
+

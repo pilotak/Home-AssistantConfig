@@ -1,0 +1,10 @@
+telegram_bot:
+  - platform: polling
+    api_key: !secret telegram_api
+    allowed_chat_ids:
+      - !secret telegram_chat_id
+
+notify:
+  - name: telegram_pavel
+    platform: telegram
+    chat_id: !secret telegram_chat_id

@@ -1,0 +1,264 @@
+- alias: Změna teploty v obýváku
+  trigger:
+    platform: state
+    entity_id: sensor.myslipotemp_1_0
+  condition:
+    condition: template
+    value_template: '{{ trigger.from_state.state != trigger.to_state.state }}'
+  action:
+    service: mqtt.publish
+    data_template:
+      topic: mqtt-weather-display/in-temp
+      qos: 1
+      retain: true
+      payload: "{%- set in_temp = states.sensor.myslipotemp_1_0.state -%} {%- if in_temp\
+        \ is not none and in_temp != \"unavailable\" -%}\n  {{ in_temp }}\n{%- endif\
+        \ -%}\n"
+  id: 10cfc9774b644cd9a252f8a7aad1ebd2
+- alias: Změna předpovědi počasí
+  trigger:
+    platform: state
+    entity_id: sensor.clientraw_symbol
+  condition:
+    condition: template
+    value_template: '{{ trigger.from_state.state != trigger.to_state.state }}'
+  action:
+    service: mqtt.publish
+    data_template:
+      topic: mqtt-weather-display/forecast
+      qos: 1
+      retain: true
+      payload: "{%- set symbol = states.sensor.clientraw_symbol.state -%} {%- if symbol\
+        \ is not none and symbol != \"unavailable\" -%}\n  {{ symbol }}\n{%- endif\
+        \ -%}\n"
+  id: 32cc2d958660498e93842682445b04ad
+- alias: Změna venkovní teploty
+  trigger:
+    platform: state
+    entity_id: sensor.clientraw_temperature
+  condition:
+    condition: template
+    value_template: '{{ trigger.from_state.state != trigger.to_state.state }}'
+  action:
+    service: mqtt.publish
+    data_template:
+      topic: mqtt-weather-display/out-temp
+      qos: 1
+      retain: true
+      payload: "{%- set out_temp = states.sensor.clientraw_temperature.state -%} {%-\
+        \ if out_temp is not none and out_temp != \"unavailable\" -%}\n  {{ out_temp\
+        \ }}\n{%- endif -%}\n"
+  id: 77cef5adbf4a44fb8475cdc54d66c668
+- id: 60c871b5e88843a39e057523aed73068
+  alias: Notifikace o nové verzi systému
+  trigger:
+  - entity_id: binary_sensor.updater
+    platform: state
+    to: '1'
+  action:
+  - data:
+      message: Nová verze systému je k dispozici https://www.home-assistant.io/latest-release-notes/
+    service: notify.telegram_pavel
+- alias: HACS update
+  trigger:
+    platform: state
+    entity_id: sensor.hacs
+  condition:
+    condition: and
+    conditions:
+    - condition: numeric_state
+      entity_id: sensor.hacs
+      above: 0
+    - condition: template
+      value_template: '{{ (trigger.from_state.state | int) < (trigger.to_state.state
+        | int) }}'
+  action:
+  - service: notify.telegram_pavel
+    data_template:
+      message: 'Upgrade balíčků je k dispozici: {{ states.sensor.hacs.state }}x'
+  id: c41e72b8f149484b85cb05c403de657a
+- id: a150369fa7be46199c8a5fb39d0daab2
+  alias: Hlídání volného místa na disku
+  trigger:
+  - above: '90'
+    entity_id: sensor.disk_use_percent
+    platform: numeric_state
+  action:
+  - data:
+      message: 'Dochází místo na disku HA: {{ states.sensor.disk_use_.state }}%!'
+      title: POZOR!!
+    service: persistent_notification.create
+  - data:
+      message: 'Dochází místo na disku HA: {{ states.sensor.disk_use_.state }}%!'
+    service: notify.telegram_pavel
+- alias: Konec 3D tisku
+  initial_state: false
+  trigger:
+    platform: state
+    entity_id: binary_sensor.octoprint_printing
+    from: 'on'
+    to: 'off'
+  action:
+  - service: notify.telegram_pavel
+    data_template:
+      message: 3D tisk - hotovo!
+  - service: automation.turn_off
+    entity_id: automation.konec_3d_tisku
+  id: 63299e3f67ff4247b2ab62ec7c52dd02
+- alias: Chyba 3D tisku
+  trigger:
+    platform: state
+    entity_id: binary_sensor.octoprint_printing_error
+    from: 'off'
+    to: 'on'
+  action:
+  - service: notify.telegram
+    data_template:
+      message: 3D tisk - CHYBA
+  id: 19ad6acbcb0d434caca52ba4c9aa9f35
+- alias: Hlídání rostliny
+  trigger:
+    platform: state
+    entity_id: sensor.kala_problem
+  action:
+  - service: notify.telegram_pavel
+    data_template:
+      message: 'Kala změnila status: {{ states.sensor.kala_problem.state }}'
+  id: 5d7505aa87fa4148955180ec15911682
+- id: 315c61c7554945b1b72042c60c03bfb1
+  alias: IR lampa v obýváku
+  trigger:
+  - payload: short
+    platform: mqtt
+    topic: lirc/pioneer/KEY_SCROLLDOWN
+  action:
+  - data:
+      entity_id: light.lampa_obyvak
+    service: light.toggle
+- id: 5e189626f9854b848f6eecee05059e5e
+  alias: IR světlo v obýváku
+  trigger:
+  - payload: short
+    platform: mqtt
+    topic: lirc/pioneer/KEY_SCROLLUP
+  action:
+  - data:
+      entity_id: light.svetlo_obyvak
+    service: light.toggle
+- alias: Vypnout počítačovou zásuvku
+  trigger:
+    platform: time
+    at: 02:00:00
+  condition:
+  - condition: state
+    entity_id: sensor.octoprint_current_state
+    state: unknown
+  action:
+    service: switch.turn_off
+    entity_id: switch.socket_table
+  id: 7d428773aa6e4c9ebe84e029c89f8266
+- id: rpi_power_issue
+  alias: Problém s napájením
+  trigger:
+  - platform: numeric_state
+    entity_id: sensor.rpi_power_status
+    value_template: '{{ state.attributes.value }}'
+    above: 0
+    for:
+      minutes: 5
+  condition:
+  action:
+  - service: notify.telegram_pavel
+    data_template:
+      title: '*Problém s napájením*'
+      message: '{{ states.sensor.rpi_power_status.state }}, předchozí{{ trigger.from_state.state
+        }} '
+- id: 3242e4699dd34069bfbae961e6576bc0
+  alias: Zapnout noční režim
+  trigger:
+  - at: 00:00:00
+    platform: time
+  action:
+  - data:
+      payload: 1
+      qos: 1
+      retain: true
+      topic: mqtt-weather-display/night
+    data_template:
+      payload: 1
+      qos: 1
+      retain: true
+      topic: mqtt-weather-display/night
+    service: mqtt.publish
+- id: 5e4aa690354245bd90073ed4346a5b5c
+  alias: Vypnout noční režim
+  trigger:
+  - at: 05:30:00
+    platform: time
+  action:
+  - data:
+      payload: 0
+      qos: 1
+      retain: true
+      topic: mqtt-weather-display/night
+    service: mqtt.publish
+- alias: Zrcadlení lampy v obýváku
+  trigger:
+    - platform: state
+      entity_id: light.living_room_lamp_button
+    - platform: state
+      entity_id: light.lampa_obyvak
+  action:
+    service_template: >
+      {% if trigger.to_state.state == "on" %}
+      light.turn_on
+      {% elif trigger.to_state.state == "off" %}
+      light.turn_off
+      {% endif %}
+    data_template: 
+      entity_id: >
+        {% if trigger.from_state.entity_id == "light.living_room_lamp_button" %}
+        light.lampa_obyvak
+        {% elif trigger.from_state.entity_id == "light.lampa_obyvak" %}
+        light.living_room_lamp_button
+        {% endif %}
+- alias: Zrcadlení světla v obýváku
+  trigger:
+    - platform: state
+      entity_id: light.living_room_button
+    - platform: state
+      entity_id: light.svetlo_obyvak
+  action:
+    service_template: >
+      {% if trigger.to_state.state == "on" %}
+      light.turn_on
+      {% elif trigger.to_state.state == "off" %}
+      light.turn_off
+      {% endif %}
+    data_template: 
+      entity_id: >
+        {% if trigger.from_state.entity_id == "light.living_room_button" %}
+        light.svetlo_obyvak
+        {% elif trigger.from_state.entity_id == "light.svetlo_obyvak" %}
+        light.living_room_button
+        {% endif %}
+- alias: Zrcadlení světla v kumbálu
+  trigger:
+    - platform: state
+      entity_id: light.hall_shoes_button
+    - platform: state
+      entity_id: light.kumbal
+  action:
+    service_template: >
+      {% if trigger.to_state.state == "on" %}
+      light.turn_on
+      {% elif trigger.to_state.state == "off" %}
+      light.turn_off
+      {% endif %}
+    data_template: 
+      entity_id: >
+        {% if trigger.from_state.entity_id == "light.hall_shoes_button" %}
+        light.kumbal
+        {% elif trigger.from_state.entity_id == "light.kumbal" %}
+        light.hall_shoes_button
+        {% endif %}

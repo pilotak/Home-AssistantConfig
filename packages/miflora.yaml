@@ -1,0 +1,26 @@
+sensor:
+  - platform: miflora
+    mac: !secret miflora_mac
+    monitored_conditions:
+      - moisture
+      - conductivity
+      - battery
+      - light
+    name: plant1
+
+  - platform: attributes
+    friendly_name: Baterie
+    attribute: battery
+    unit_of_measurement: "%"
+    entities:
+      - plant.kala
+
+plant:
+  kala:
+    sensors:
+      moisture: sensor.plant1_moisture
+      conductivity: sensor.plant1_conductivity
+      battery: sensor.plant1_battery
+    min_moisture: 18
+    min_conductivity: 500
+    min_battery: 80

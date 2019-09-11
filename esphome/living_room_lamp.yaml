@@ -1,0 +1,50 @@
+esphome:
+  name: "living_room_lamp"
+  platform: ESP8266
+  board: esp01_1m
+  esp8266_restore_from_flash: True
+
+wifi:
+  networks:
+  - ssid: !secret ssid
+    password: !secret password
+
+logger:
+
+# Enable Home Assistant API
+api:
+
+ota:
+
+sensor:
+  - platform: wifi_signal
+    name: "Lampa obývák: signál"
+    update_interval: 300s
+
+output:
+  - platform: gpio
+    pin: GPIO12
+    id: relay
+
+light:
+  - platform: binary
+    name: "Lampa obývák"
+    output: relay
+    id: lamp
+
+binary_sensor:
+  - platform: status
+    name: "Lampa obývák: status"
+  - platform: gpio
+    id: button
+    pin:
+      number: GPIO0
+      mode: INPUT_PULLUP
+      inverted: True
+    on_press:
+      - light.toggle: lamp
+
+status_led:
+  pin:
+    number: GPIO13
+    inverted: yes

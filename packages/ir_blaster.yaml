@@ -1,0 +1,4 @@
+switch:
+  - platform: broadlink
+    host: !secret ir_blaster_ip
+    mac: !secret ir_blaster_mac 

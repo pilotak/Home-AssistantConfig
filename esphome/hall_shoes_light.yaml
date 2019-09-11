@@ -1,0 +1,50 @@
+esphome:
+  name: "hall_shoes_light"
+  platform: ESP8266
+  board: esp8285
+  esp8266_restore_from_flash: True
+
+wifi:
+  networks:
+  - ssid: !secret ssid
+    password: !secret password
+
+logger:
+
+# Enable Home Assistant API
+api:
+
+ota:
+
+sensor:
+  - platform: wifi_signal
+    name: "Kumbál: signál"
+    update_interval: 300s
+
+output:
+  - platform: gpio
+    pin: GPIO12
+    id: relay
+
+light:
+  - platform: binary
+    name: "Kumbál"
+    output: relay
+    id: lamp
+
+binary_sensor:
+  - platform: status
+    name: "Kumbál: status"
+  - platform: gpio
+    id: button
+    pin:
+      number: GPIO0
+      mode: INPUT_PULLUP
+      inverted: True
+    on_press:
+      - light.toggle: lamp
+
+status_led:
+  pin:
+    number: GPIO13
+    inverted: yes

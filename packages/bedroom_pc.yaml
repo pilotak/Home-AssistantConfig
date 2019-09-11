@@ -1,0 +1,17 @@
+switch:
+  - platform: mqtt
+    name: "socket_table"
+    command_topic: "bedroom/relay/2/set"
+    state_topic: "bedroom/relay/2"
+    availability_topic: "nodered/status"
+    payload_on: 1
+    payload_off: 0
+    payload_available: 1
+    payload_not_available: 0
+    optimistic: false
+    qos: 1
+
+media_player:
+  - platform: spotify
+    client_id:  !secret spotify_client
+    client_secret: !secret spotify_secret

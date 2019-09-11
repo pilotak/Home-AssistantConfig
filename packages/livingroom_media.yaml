@@ -1,0 +1,12 @@
+media_player:
+  - platform: kodi
+    host: !secret kodi_ip
+    turn_off_action:
+      service: media_player.kodi_call_method
+      data:
+        entity_id: media_player.kodi
+        method: System.Shutdown
+
+  - platform: lg_netcast
+    host: !secret tv_ip
+    access_token: !secret tv_token

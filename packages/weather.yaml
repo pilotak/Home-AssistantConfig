@@ -1,0 +1,36 @@
+sensor:
+  - platform: yr
+    monitored_conditions:
+      - precipitation
+
+  - platform: clientraw
+    url: !secret clientraw_url
+    interval: 12
+    monitored_conditions:
+      - dewpoint
+      - temp
+      - humidex
+      - wind_dir
+      - wind_gust
+      - wind_speed
+      - symbol
+      - daily_rain
+      - pressure
+      - humidity
+
+  - platform: rflink
+    devices:
+      auriolv3_c401_temp:
+        sensor_type: temperature
+      auriolv3_c401_hum:
+        sensor_type: humidity
+      inovalley_9701_temp:
+        sensor_type: temperature
+      inovalley_9701_hum:
+        sensor_type: humidity
+      inovalley_bb01_temp:
+        sensor_type: temperature
+      inovalley_bb01_hum:
+        sensor_type: humidity
+      mebus_7701_temp:
+        sensor_type: temperature

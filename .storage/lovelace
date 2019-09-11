@@ -1,0 +1,593 @@
+{
+    "data": {
+        "config": {
+            "resources": [
+                {
+                    "type": "js",
+                    "url": "/community_plugin/vertical-stack-in-card/vertical-stack-in-card.js"
+                },
+                {
+                    "type": "js",
+                    "url": "/community_plugin/bar-card/bar-card.js"
+                },
+                {
+                    "type": "js",
+                    "url": "/community_plugin/love-lock-card/love-lock-card.js"
+                },
+                {
+                    "type": "js",
+                    "url": "/community_plugin/lovelace-fold-entity-row/fold-entity-row.js"
+                },
+                {
+                    "type": "js",
+                    "url": "/community_plugin/lovelace-slider-entity-row/slider-entity-row.js"
+                },
+                {
+                    "type": "js",
+                    "url": "/community_plugin/lovelace-swipe-navigation/swipe-navigation.js"
+                },
+                {
+                    "type": "module",
+                    "url": "/community_plugin/mini-graph-card/mini-graph-card-bundle.js"
+                }
+            ],
+            "title": "Doma",
+            "views": [
+                {
+                    "cards": [
+                        {
+                            "entity": "weather.doma",
+                            "type": "weather-forecast"
+                        },
+                        {
+                            "entities": [
+                                {
+                                    "head": {
+                                        "label": "Ob\u00fdv\u00e1k",
+                                        "type": "section"
+                                    },
+                                    "items": [
+                                        {
+                                            "entity": "light.svetlo_obyvak",
+                                            "name": "Sv\u011btlo"
+                                        },
+                                        {
+                                            "entity": "light.lampa_obyvak",
+                                            "name": "Lampa"
+                                        }
+                                    ],
+                                    "open": true,
+                                    "type": "custom:fold-entity-row"
+                                },
+                                {
+                                    "head": {
+                                        "label": "Pokoj\u00ed\u010dek",
+                                        "type": "section"
+                                    },
+                                    "items": [
+                                        {
+                                            "entity": "light.child_room",
+                                            "name": "Hlavn\u00ed sv\u011btlo",
+                                            "toggle": true,
+                                            "type": "custom:slider-entity-row"
+                                        }
+                                    ],
+                                    "open": true,
+                                    "type": "custom:fold-entity-row"
+                                },
+                                {
+                                    "head": {
+                                        "label": "Lo\u017enice",
+                                        "type": "section"
+                                    },
+                                    "items": [
+                                        {
+                                            "entity": "light.bedroom",
+                                            "name": "Hlavn\u00ed sv\u011btlo",
+                                            "toggle": true,
+                                            "type": "custom:slider-entity-row"
+                                        },
+                                        {
+                                            "entity": "light.bedroom_lamp",
+                                            "name": "Lampa",
+                                            "toggle": true,
+                                            "type": "custom:slider-entity-row"
+                                        }
+                                    ],
+                                    "open": true,
+                                    "type": "custom:fold-entity-row"
+                                },
+                                {
+                                    "head": {
+                                        "label": "Chodba",
+                                        "type": "section"
+                                    },
+                                    "items": [
+                                        {
+                                            "entity": "light.hall_closets",
+                                            "name": "Sk\u0159\u00edn\u011b"
+                                        },
+                                        {
+                                            "entity": "light.kumbal",
+                                            "name": "Boty"
+                                        },
+                                        {
+                                            "entity": "light.hall_coat_hook",
+                                            "name": "V\u011b\u0161\u00e1k na bundy",
+                                            "toggle": true,
+                                            "type": "custom:slider-entity-row"
+                                        },
+                                        {
+                                            "entity": "light.hall_dryer",
+                                            "name": "Su\u0161\u00e1k",
+                                            "toggle": true,
+                                            "type": "custom:slider-entity-row"
+                                        }
+                                    ],
+                                    "type": "custom:fold-entity-row"
+                                },
+                                {
+                                    "head": {
+                                        "label": "Kuchyn\u011b",
+                                        "type": "section"
+                                    },
+                                    "items": [
+                                        {
+                                            "entity": "light.kitchen",
+                                            "name": "Hlavn\u00ed sv\u011btlo",
+                                            "toggle": true,
+                                            "type": "custom:slider-entity-row"
+                                        }
+                                    ],
+                                    "type": "custom:fold-entity-row"
+                                }
+                            ],
+                            "show_header_toggle": false,
+                            "title": "Sv\u011btla",
+                            "type": "entities"
+                        },
+                        {
+                            "cards": [
+                                {
+                                    "entities": [
+                                        {
+                                            "entity": "plant.kala",
+                                            "name": "Stav"
+                                        },
+                                        {
+                                            "entity": "sensor.plant1_moisture",
+                                            "name": "Vlhkost"
+                                        },
+                                        {
+                                            "entity": "sensor.plant1_light_intensity",
+                                            "name": "Sv\u011btlo"
+                                        },
+                                        {
+                                            "entity": "sensor.plant1_conductivity",
+                                            "name": "Miner\u00e1ly"
+                                        },
+                                        {
+                                            "entity": "sensor.kala_battery",
+                                            "name": "Baterie"
+                                        }
+                                    ],
+                                    "type": "entities"
+                                },
+                                {
+                                    "entities": [
+                                        {
+                                            "entity": "sensor.plant1_moisture",
+                                            "name": "Vlhkost"
+                                        }
+                                    ],
+                                    "hours_to_show": 24,
+                                    "title": "",
+                                    "type": "history-graph"
+                                }
+                            ],
+                            "title": "Kala",
+                            "type": "custom:vertical-stack-in-card"
+                        },
+                        {
+                            "entities": [
+                                {
+                                    "entity": "sensor.clientraw_temperature",
+                                    "name": "Teplota"
+                                },
+                                {
+                                    "entity": "sensor.clientraw_humidex",
+                                    "name": "Pocitov\u00e1 teplota"
+                                },
+                                {
+                                    "entity": "sensor.clientraw_humidity",
+                                    "name": "Vlhkost"
+                                },
+                                {
+                                    "entity": "sensor.clientraw_pressure",
+                                    "name": "Tlak"
+                                },
+                                {
+                                    "entity": "sensor.clientraw_wind_direction",
+                                    "name": "Sm\u011br v\u011btru"
+                                },
+                                {
+                                    "entity": "sensor.clientraw_wind_gust",
+                                    "name": "Rychlost v\u011btru v n\u00e1razech"
+                                },
+                                {
+                                    "entity": "sensor.clientraw_wind_speed",
+                                    "name": "Rychlost v\u011btru"
+                                },
+                                {
+                                    "entity": "sensor.clientraw_dewpoint",
+                                    "name": "Rosn\u00fd bod"
+                                },
+                                {
+                                    "entity": "sensor.clientraw_daily_rain",
+                                    "name": "Dnes napr\u0161elo"
+                                },
+                                {
+                                    "entity": "sensor.yr_precipitation",
+                                    "name": "P\u0159edpov\u011b\u010f de\u0161t\u011b"
+                                }
+                            ],
+                            "show_header_toggle": false,
+                            "title": "Po\u010das\u00ed",
+                            "type": "entities"
+                        },
+                        {
+                            "entity": "media_player.kodi",
+                            "type": "media-control"
+                        },
+                        {
+                            "entity": "media_player.lg_tv_remote",
+                            "type": "media-control"
+                        }
+                    ],
+                    "title": "Obecn\u00e9"
+                },
+                {
+                    "badges": [],
+                    "cards": [
+                        {
+                            "align_header": "left",
+                            "align_icon": "left",
+                            "entities": [
+                                {
+                                    "entity": "sensor.mystemp868_sleepy_101_1",
+                                    "name": "Teplota pokoj\u00ed\u010dek 868MHz"
+                                },
+                                {
+                                    "entity": "sensor.myslipotemp_4_0",
+                                    "name": "Teplota pokoj\u00ed\u010dek"
+                                }
+                            ],
+                            "font_size_header": 15,
+                            "hour24": true,
+                            "line_color": "var(--primary-color)",
+                            "line_width": 2,
+                            "name": "Teplota pokoj\u00ed\u010dek",
+                            "points_per_hour": 2,
+                            "show": [
+                                {
+                                    "extrema": true
+                                },
+                                {
+                                    "fill": true
+                                }
+                            ],
+                            "type": "custom:mini-graph-card"
+                        },
+                        {
+                            "align_header": "left",
+                            "align_icon": "left",
+                            "entities": [
+                                {
+                                    "entity": "sensor.myslipotemp_3_0",
+                                    "name": "Teplota kuchyn\u011b"
+                                }
+                            ],
+                            "font_size_header": 15,
+                            "hour24": true,
+                            "line_color": "var(--primary-color)",
+                            "line_width": 2,
+                            "name": "Teplota kuchyn\u011b",
+                            "points_per_hour": 2,
+                            "show": [
+                                {
+                                    "extrema": true
+                                },
+                                {
+                                    "fill": true
+                                }
+                            ],
+                            "type": "custom:mini-graph-card"
+                        },
+                        {
+                            "align_header": "left",
+                            "align_icon": "left",
+                            "entities": [
+                                {
+                                    "entity": "sensor.mystemp868_100_0",
+                                    "name": "Teplota lo\u017enice 868MHz"
+                                },
+                                {
+                                    "entity": "sensor.myslipotemp_2_0",
+                                    "name": "Teplota lo\u017enice 2.4GHz"
+                                }
+                            ],
+                            "font_size_header": 15,
+                            "hour24": true,
+                            "line_color": "var(--primary-color)",
+                            "line_width": 2,
+                            "name": "Teplota lo\u017enice",
+                            "points_per_hour": 2,
+                            "show": [
+                                {
+                                    "extrema": true
+                                },
+                                {
+                                    "fill": true
+                                }
+                            ],
+                            "type": "custom:mini-graph-card"
+                        },
+                        {
+                            "align_header": "left",
+                            "align_icon": "left",
+                            "entities": [
+                                {
+                                    "entity": "sensor.myslipotemp_1_0",
+                                    "name": "Teplota ob\u00fdv\u00e1k"
+                                }
+                            ],
+                            "font_size_header": 15,
+                            "hour24": true,
+                            "line_color": "var(--primary-color)",
+                            "line_width": 2,
+                            "name": "Teplota ob\u00fdv\u00e1k",
+                            "points_per_hour": 2,
+                            "show": [
+                                {
+                                    "extrema": true
+                                },
+                                {
+                                    "fill": true
+                                }
+                            ],
+                            "type": "custom:mini-graph-card"
+                        }
+                    ],
+                    "path": "teploty",
+                    "title": "Teploty"
+                },
+                {
+                    "badges": [],
+                    "cards": [
+                        {
+                            "align": "center",
+                            "columns": 1,
+                            "entities": [
+                                {
+                                    "entity": "sensor.mikrotik_uptime",
+                                    "icon": "mdi:clock",
+                                    "title": "Uptime"
+                                }
+                            ],
+                            "padding": "4px",
+                            "title_position": "inside",
+                            "type": "custom:bar-card"
+                        },
+                        {
+                            "color_thresholds": [
+                                {
+                                    "color": "red",
+                                    "value": 0
+                                },
+                                {
+                                    "color": null,
+                                    "value": 80
+                                }
+                            ],
+                            "entities": [
+                                "sensor.speedtest_upload"
+                            ],
+                            "font_size": 70,
+                            "height": 50,
+                            "hour24": true,
+                            "hours_to_show": 48,
+                            "line_width": 2,
+                            "points_per_hour": 1,
+                            "show": [
+                                {
+                                    "extrema": true,
+                                    "fill": true
+                                }
+                            ],
+                            "type": "custom:mini-graph-card"
+                        },
+                        {
+                            "color_thresholds": [
+                                {
+                                    "color": "red",
+                                    "value": 0
+                                },
+                                {
+                                    "color": null,
+                                    "value": 85
+                                }
+                            ],
+                            "entities": [
+                                "sensor.speedtest_download"
+                            ],
+                            "font_size": 70,
+                            "height": 50,
+                            "hour24": true,
+                            "hours_to_show": 48,
+                            "line_width": 2,
+                            "points_per_hour": 1,
+                            "show": [
+                                {
+                                    "extrema": true,
+                                    "fill": true
+                                }
+                            ],
+                            "type": "custom:mini-graph-card"
+                        },
+                        {
+                            "align": "split",
+                            "columns": 2,
+                            "entities": [
+                                {
+                                    "entity": "sensor.mikrotik_cpu_load",
+                                    "icon": "mdi:memory",
+                                    "severity": [
+                                        {
+                                            "color": "#1db954",
+                                            "value": 40
+                                        },
+                                        {
+                                            "color": "#bf9540",
+                                            "value": 60
+                                        },
+                                        {
+                                            "color": "#bf4040",
+                                            "value": 100
+                                        }
+                                    ],
+                                    "title": "CPU",
+                                    "unit_of_measurement": "%"
+                                },
+                                {
+                                    "entity": "sensor.mikrotik_memory",
+                                    "icon": "mdi:memory",
+                                    "severity": [
+                                        {
+                                            "color": "#1db954",
+                                            "value": 40
+                                        },
+                                        {
+                                            "color": "#bf9540",
+                                            "value": 60
+                                        },
+                                        {
+                                            "color": "#bf4040",
+                                            "value": 100
+                                        }
+                                    ],
+                                    "unit_of_measurement": "%"
+                                }
+                            ],
+                            "padding": "4px",
+                            "show_icon": true,
+                            "title_position": "inside",
+                            "type": "custom:bar-card"
+                        },
+                        {
+                            "entities": [
+                                {
+                                    "color_thresholds": [
+                                        {
+                                            "color": "red",
+                                            "value": 25
+                                        },
+                                        {
+                                            "color": "#3498db",
+                                            "value": 0
+                                        }
+                                    ],
+                                    "entities": [
+                                        "sensor.speedtest_ping"
+                                    ],
+                                    "font_size": 70,
+                                    "height": 20,
+                                    "hour24": true,
+                                    "hours_to_show": 48,
+                                    "line_width": 2,
+                                    "points_per_hour": 1,
+                                    "show": {
+                                        "fill": true,
+                                        "graph": "bar"
+                                    },
+                                    "type": "custom:mini-graph-card"
+                                }
+                            ],
+                            "show_header_toggle": false,
+                            "title": "Rychlost internetu",
+                            "type": "entities"
+                        },
+                        {
+                            "entity": "media_player.spotify",
+                            "type": "media-control"
+                        },
+                        {
+                            "entities": [
+                                {
+                                    "entity": "sensor.rpi_power_status"
+                                }
+                            ],
+                            "type": "entities"
+                        }
+                    ],
+                    "path": "system",
+                    "title": "Syst\u00e9m"
+                },
+                {
+                    "badges": [],
+                    "cards": [
+                        {
+                            "entities": [
+                                {
+                                    "entity": "switch.prusa_power"
+                                },
+                                {
+                                    "entity": "sensor.octoprint_current_state"
+                                },
+                                {
+                                    "entity": "sensor.octoprint_job_percentage"
+                                },
+                                {
+                                    "entity": "sensor.octoprint_time_elapsed"
+                                },
+                                {
+                                    "entity": "sensor.octoprint_time_remaining"
+                                },
+                                {
+                                    "entity": "sensor.octoprint_actual_tool0_temp"
+                                },
+                                {
+                                    "entity": "sensor.octoprint_target_tool0_temp"
+                                },
+                                {
+                                    "entity": "sensor.octoprint_target_bed_temp"
+                                },
+                                {
+                                    "entity": "sensor.octoprint_actual_bed_temp"
+                                },
+                                {
+                                    "entity": "automation.konec_3d_tisku"
+                                },
+                                {
+                                    "entity": "automation.chyba_3d_tisku"
+                                },
+                                {
+                                    "entity": "binary_sensor.octoprint_printing"
+                                },
+                                {
+                                    "entity": "binary_sensor.octoprint_printing_error"
+                                }
+                            ],
+                            "show_header_toggle": false,
+                            "title": "Tisk\u00e1rna",
+                            "type": "entities"
+                        }
+                    ],
+                    "path": "tiskarna",
+                    "title": "Tisk\u00e1rna"
+                }
+            ]
+        }
+    },
+    "key": "lovelace",
+    "version": 1
+}

@@ -1,0 +1,54 @@
+device_tracker:
+  - platform: snmp
+    host: !secret mikrotik_ip
+    community: public
+    baseoid: 1.3.6.1.4.1.14988.1.1.1.2.1.1
+
+sensor:
+  - platform: snmp
+    host: !secret mikrotik_ip
+    baseoid: 1.3.6.1.2.1.1.3.0
+    name: Mikrotik Uptime
+    value_template: >-
+      {% set time = (value | int) | int %}
+      {% set minutes = ((time % 360000) / 6000) | int%}
+      {% set hours = ((time % 8640000) / 360000) | int %}
+      {% set days = (time / 8640000) | int %}
+        {%- if time < 60 -%}
+          Less then 1 min
+          {%- else -%}
+          {%- if days > 0 -%}
+            {{ days }}d
+          {%- endif -%}
+          {%- if hours > 0 -%}
+            {%- if days > 0 -%}
+              {{ ' ' }}
+            {%- endif -%}
+            {{ hours }}hr
+          {%- endif -%}
+          {%- if minutes > 0 -%}
+            {%- if days > 0 or hours > 0 -%}
+              {{ ' ' }}
+            {%- endif -%}
+            {{ minutes }}min
+          {%- endif -%}
+        {%- endif -%}
+
+  - platform: snmp
+    host: !secret mikrotik_ip
+    baseoid: 1.3.6.1.2.1.25.2.3.1.6.65536
+    name: Mikrotik Used Memory
+    unit_of_measurement: '%'
+
+  - platform: snmp
+    host: !secret mikrotik_ip
+    baseoid: 1.3.6.1.4.1.2021.11.10.0
+    name: Mikrotik CPU Load
+    unit_of_measurement: '%'
+
+  - platform: template
+    sensors:
+      mikrotik_memory:
+        value_template: '{{ ((states.sensor.mikrotik_used_memory.state|int / 960000) * 100)|round(2) }}'
+        friendly_name: 'Memory'
+        unit_of_measurement: '%'
