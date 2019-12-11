@@ -21,35 +21,3 @@ light:
         name: hall_shoes_button
       newkaku_0059f642_b:
         name: living_room_button
-
-  - platform: mqtt
-    name: living_room_lamp
-    state_topic: "sonoff/living-lamp/relay/0"
-    command_topic: "sonoff/living-lamp/relay/0/set"
-    availability_topic: "sonoff/living-lamp/status"
-    payload_on: 1
-    payload_off: 0
-    payload_available: 1
-    payload_not_available: 0
-    optimistic: false
-
-  - platform: mqtt
-    name: hall_closets
-    state_topic: "sonoff/hall-closets/relay/0"
-    command_topic: "sonoff/hall-closets/relay/0/set"
-    availability_topic: "sonoff/hall-closets/status"
-    payload_on: 1
-    payload_off: 0
-    payload_available: 1
-    payload_not_available: 0
-    optimistic: false
-
-  - name: hall_shoes
-    platform: mqtt
-    state_topic: sonoff/hall-shoes/relay/0
-    command_topic: sonoff/hall-shoes/relay/0/set
-    payload_on: 1
-    payload_off: 0
-    availability_topic: sonoff/hall-shoes/status
-    payload_available: 1
-    payload_not_available: 0
