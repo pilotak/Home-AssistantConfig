@@ -1,0 +1,61 @@
+esphome:
+  name: "hall_closets"
+  platform: ESP8266
+  board: esp01_1m
+  esp8266_restore_from_flash: True
+
+wifi:
+  networks:
+  - ssid: !secret ssid
+    password: !secret password
+
+logger:
+
+# Enable Home Assistant API
+api:
+
+ota:
+
+sensor:
+  - platform: wifi_signal
+    name: "Skříně: signál"
+    update_interval: 300s
+
+output:
+  - platform: gpio
+    pin: GPIO12
+    id: relay
+
+light:
+  - platform: binary
+    name: "Skříně"
+    output: relay
+    id: closets
+
+binary_sensor:
+  - platform: status
+    name: "Skříně: status"
+  
+  - platform: gpio
+    id: button
+    pin:
+      number: GPIO0
+      mode: INPUT_PULLUP
+      inverted: True
+    on_press:
+      - light.toggle: closets
+  
+  - platform: gpio
+    id: or_gate
+    pin:
+      number: GPIO14
+      mode: INPUT_PULLUP
+    on_press:
+      - light.turn_on: closets
+    on_release:
+      - light.turn_off: closets
+
+status_led:
+  pin:
+    number: GPIO13
+    inverted: yes

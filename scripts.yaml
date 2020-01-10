@@ -1,0 +1,10 @@
+'1577380791752':
+  alias: Vysát kuchyň
+  sequence:
+  - data:
+      command: zoned_cleanup
+      params:
+        zone_ids:
+        - Kuchyně
+    entity_id: vacuum.mirobot
+    service: vacuum.send_command

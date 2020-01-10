@@ -1,0 +1,13 @@
+vacuum:
+  - platform: xiaomi_miio
+    host: !secret mirobot_ip
+    token: !secret mirobot_token
+    name: "Vysavač"
+
+sensor:
+  - platform: mqtt
+    state_topic: "valetudo/mirobot/state"
+    json_attributes_topic: "valetudo/mirobot/map_data"
+    name: xiaomi_map
+    value_template: 'OK'
+    scan_interval: 5

@@ -38,7 +38,7 @@ sensor:
     host: !secret mikrotik_ip
     baseoid: 1.3.6.1.2.1.25.2.3.1.6.65536
     name: Mikrotik Used Memory
-    unit_of_measurement: '%'
+    unit_of_measurement: 'bytes'
 
   - platform: snmp
     host: !secret mikrotik_ip

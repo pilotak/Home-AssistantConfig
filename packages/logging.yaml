@@ -1,5 +1,6 @@
 recorder:
   purge_keep_days: 30
+  db_url: !secret recorder_url
 
 history:
   exclude:
@@ -9,6 +10,8 @@ history:
       - persistent_notification.invalid_config
       - sensor.time
       - sensor.mikrotik_uptime
+      - sensor.teplota_procesoru
+      - sensor.xiaomi_map
     domains:
       - group
       - updater
@@ -27,6 +30,14 @@ logbook:
       - sensor.clientraw_wind_direction
       - sensor.mikrotik_uptime
       - sensor.time
+      - sensor.xiaomi_map
+      - automation.zrcadleni_lampy_v_obyvaku
+      - automation.zrcadleni_svetla_v_kumbalu
+      - automation.zrcadleni_svetla_v_obyvaku
+      - automation.vypnout_nocni_rezim
+      - automation.zapnout_nocni_rezim
+      - automation.zmena_teploty_v_obyvaku
+      - automation.zmena_venkovni_teploty
     domains:
       - sun
       - updater

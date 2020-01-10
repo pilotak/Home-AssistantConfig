@@ -8,8 +8,15 @@ sensor:
       - type: last_boot
       - type: disk_use_percent
         arg: /
+      - type: memory_use_percent
+      - type: processor_use
 
-  - platform: uptime
+  - platform: command_line
+    command: "cat /sys/class/thermal/thermal_zone0/temp"
+    unit_of_measurement: "°C"
+    value_template: '{{ value | multiply(0.001) | round(2) }}'
+    name: 'Teplota procesoru'
+    scan_interval: 10
 
   - platform: rpi_power
     text_state: true

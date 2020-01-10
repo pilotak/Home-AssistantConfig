@@ -54,29 +54,31 @@
   trigger:
   - entity_id: binary_sensor.updater
     platform: state
-    to: '1'
+    to: 'on'
   action:
   - data:
       message: Nová verze systému je k dispozici https://www.home-assistant.io/latest-release-notes/
     service: notify.telegram_pavel
-- alias: HACS update
+
+- id: c41e72b8f149484b85cb05c403de657a
+  alias: HACS update
   trigger:
     platform: state
     entity_id: sensor.hacs
   condition:
-    condition: and
-    conditions:
-    - condition: numeric_state
-      entity_id: sensor.hacs
-      above: 0
     - condition: template
-      value_template: '{{ (trigger.from_state.state | int) < (trigger.to_state.state
-        | int) }}'
+      value_template: "{{ states(trigger.entity_id) != 'unknown'}}"
+    - condition: template
+      value_template: "{{ (states(trigger.entity_id) | float) != 0}}"
   action:
-  - service: notify.telegram_pavel
+    service: notify.telegram_pavel
     data_template:
-      message: 'Upgrade balíčků je k dispozici: {{ states.sensor.hacs.state }}x'
-  id: c41e72b8f149484b85cb05c403de657a
+      title: 'Upgrade balíčků je k dispozici: {{ states.sensor.hacs.state }}x'
+      message: >-
+        {% for repo in state_attr(trigger.entity_id, 'repositories') %}
+          **{{ repo.display_name }}** _{{ repo["installed version"] }}_ -> _{{ repo["available version"] }}_
+        {% endfor %}
+
 - id: a150369fa7be46199c8a5fb39d0daab2
   alias: Hlídání volného místa na disku
   trigger:
@@ -193,7 +195,7 @@
 - id: 5e4aa690354245bd90073ed4346a5b5c
   alias: Vypnout noční režim
   trigger:
-  - at: 05:30:00
+  - at: 05:00:00
     platform: time
   action:
   - data:
@@ -204,61 +206,52 @@
     service: mqtt.publish
 - alias: Zrcadlení lampy v obýváku
   trigger:
-    - platform: state
-      entity_id: light.living_room_lamp_button
-    - platform: state
-      entity_id: light.lampa_obyvak
+  - platform: state
+    entity_id: light.living_room_lamp_button
+  - platform: state
+    entity_id: light.lampa_obyvak
   action:
-    service_template: >
-      {% if trigger.to_state.state == "on" %}
-      light.turn_on
-      {% elif trigger.to_state.state == "off" %}
-      light.turn_off
-      {% endif %}
-    data_template: 
-      entity_id: >
-        {% if trigger.from_state.entity_id == "light.living_room_lamp_button" %}
-        light.lampa_obyvak
-        {% elif trigger.from_state.entity_id == "light.lampa_obyvak" %}
-        light.living_room_lamp_button
-        {% endif %}
+    service_template: '{% if trigger.to_state.state == "on" %} light.turn_on {% elif
+      trigger.to_state.state == "off" %} light.turn_off {% endif %}
+
+      '
+    data_template:
+      entity_id: '{% if trigger.from_state.entity_id == "light.living_room_lamp_button"
+        %} light.lampa_obyvak {% elif trigger.from_state.entity_id == "light.lampa_obyvak"
+        %} light.living_room_lamp_button {% endif %}
+
+        '
 - alias: Zrcadlení světla v obýváku
   trigger:
-    - platform: state
-      entity_id: light.living_room_button
-    - platform: state
-      entity_id: light.svetlo_obyvak
+  - platform: state
+    entity_id: light.living_room_button
+  - platform: state
+    entity_id: light.svetlo_obyvak
   action:
-    service_template: >
-      {% if trigger.to_state.state == "on" %}
-      light.turn_on
-      {% elif trigger.to_state.state == "off" %}
-      light.turn_off
-      {% endif %}
-    data_template: 
-      entity_id: >
-        {% if trigger.from_state.entity_id == "light.living_room_button" %}
-        light.svetlo_obyvak
-        {% elif trigger.from_state.entity_id == "light.svetlo_obyvak" %}
-        light.living_room_button
-        {% endif %}
+    service_template: '{% if trigger.to_state.state == "on" %} light.turn_on {% elif
+      trigger.to_state.state == "off" %} light.turn_off {% endif %}
+
+      '
+    data_template:
+      entity_id: '{% if trigger.from_state.entity_id == "light.living_room_button"
+        %} light.svetlo_obyvak {% elif trigger.from_state.entity_id == "light.svetlo_obyvak"
+        %} light.living_room_button {% endif %}
+
+        '
 - alias: Zrcadlení světla v kumbálu
   trigger:
-    - platform: state
-      entity_id: light.hall_shoes_button
-    - platform: state
-      entity_id: light.kumbal
+  - platform: state
+    entity_id: light.hall_shoes_button
+  - platform: state
+    entity_id: light.kumbal
   action:
-    service_template: >
-      {% if trigger.to_state.state == "on" %}
-      light.turn_on
-      {% elif trigger.to_state.state == "off" %}
-      light.turn_off
-      {% endif %}
-    data_template: 
-      entity_id: >
-        {% if trigger.from_state.entity_id == "light.hall_shoes_button" %}
-        light.kumbal
-        {% elif trigger.from_state.entity_id == "light.kumbal" %}
-        light.hall_shoes_button
-        {% endif %}
+    service_template: '{% if trigger.to_state.state == "on" %} light.turn_on {% elif
+      trigger.to_state.state == "off" %} light.turn_off {% endif %}
+
+      '
+    data_template:
+      entity_id: '{% if trigger.from_state.entity_id == "light.hall_shoes_button"
+        %} light.kumbal {% elif trigger.from_state.entity_id == "light.kumbal" %}
+        light.hall_shoes_button {% endif %}
+
+        '
