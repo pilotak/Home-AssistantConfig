@@ -8,3 +8,62 @@
         - Kuchyně
     entity_id: vacuum.mirobot
     service: vacuum.send_command
+
+'1577380791753':
+  alias: Vysát obývák
+  sequence:
+  - data:
+      command: zoned_cleanup
+      params:
+        zone_ids:
+        - Obývák
+    entity_id: vacuum.mirobot
+    service: vacuum.send_command
+
+'1577380791754':
+  alias: Vysát ložnici
+  sequence:
+  - data:
+      command: zoned_cleanup
+      params:
+        zone_ids:
+        - Ložnice
+    entity_id: vacuum.mirobot
+    service: vacuum.send_command
+
+'157738079175':
+  alias: Vysát pokojíček
+  sequence:
+  - data:
+      command: zoned_cleanup
+      params:
+        zone_ids:
+        - Pokojíček
+    entity_id: vacuum.mirobot
+    service: vacuum.send_command
+
+'1577380791756':
+  alias: Vysát chodbu
+  sequence:
+  - data:
+      command: zoned_cleanup
+      params:
+        zone_ids:
+        - Chodba
+    entity_id: vacuum.mirobot
+    service: vacuum.send_command
+
+'1577380791757':
+  alias: Vysát vše
+  sequence:
+  - data:
+      command: zoned_cleanup
+      params:
+        zone_ids:
+        - Kuchyně
+        - Obývák
+        - Chodba
+        - Pokojíček
+        - Ložnice
+    entity_id: vacuum.mirobot
+    service: vacuum.send_command

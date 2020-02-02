@@ -1,0 +1,89 @@
+esphome:
+  name: "energy_meter"
+  platform: ESP8266
+  board: esp01_1m
+  esp8266_restore_from_flash: True
+
+wifi:
+  networks:
+  - ssid: !secret ssid
+    password: !secret password
+
+logger:
+
+# Enable Home Assistant API
+api:
+
+ota:
+
+sensor:
+  - platform: wifi_signal
+    name: "Měřák: signál"
+    update_interval: 300s
+
+  - platform: pulse_counter
+    pin: GPIO13
+    name: "Odběr elektřiny"
+    id: power
+    unit_of_measurement: 'Wh'
+    internal_filter: 30ms
+    filters:
+      - multiply: 33.33333333333
+    count_mode:
+      rising_edge: DISABLE
+      falling_edge: INCREMENT
+
+  - platform: total_daily_energy
+    name: "Dnešní spotřeba elektřiny"
+    power_id: power
+    unit_of_measurement: 'kWh'
+    filters:
+      - multiply: 0.001
+
+output:
+  - platform: gpio
+    pin: GPIO4
+    id: relay
+
+light:
+  - platform: binary
+    name: "Chodba vstup"
+    id: svetlo
+    output: relay
+
+binary_sensor:
+  - platform: status
+    name: "Měřák: status"
+
+  - platform: gpio
+    name: "Zvonek"
+    pin:
+      number: GPIO16
+      inverted: False
+
+  - platform: gpio
+    name: "Hlavní veře"
+    device_class: door
+    pin:
+      number: GPIO14
+      inverted: True
+
+  - platform: gpio
+    name: "Chodba vypínač"
+    on_press:
+      then:
+        - light.turn_on: svetlo
+    on_release:
+      then:
+        - light.turn_off: svetlo
+    pin:
+      number: GPIO12
+      inverted: True
+
+time:
+  - platform: homeassistant
+    id: homeassistant_time
+    
+status_led:
+  pin:
+    number: GPIO15

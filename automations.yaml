@@ -11,9 +11,9 @@
       topic: mqtt-weather-display/in-temp
       qos: 1
       retain: true
-      payload: "{%- set in_temp = states.sensor.myslipotemp_1_0.state -%} {%- if in_temp\
-        \ is not none and in_temp != \"unavailable\" -%}\n  {{ in_temp }}\n{%- endif\
-        \ -%}\n"
+      payload_template: "{%- set in_temp = states.sensor.myslipotemp_1_0.state -%}\
+        \ {%- if in_temp is not none and in_temp != \"unavailable\" -%}\n  {{ in_temp\
+        \ }}\n{%- endif -%}\n"
   id: 10cfc9774b644cd9a252f8a7aad1ebd2
 - alias: Změna předpovědi počasí
   trigger:
@@ -28,9 +28,9 @@
       topic: mqtt-weather-display/forecast
       qos: 1
       retain: true
-      payload: "{%- set symbol = states.sensor.clientraw_symbol.state -%} {%- if symbol\
-        \ is not none and symbol != \"unavailable\" -%}\n  {{ symbol }}\n{%- endif\
-        \ -%}\n"
+      payload_template: "{%- set symbol = states.sensor.clientraw_symbol.state -%}\
+        \ {%- if symbol is not none and symbol != \"unavailable\" -%}\n  {{ symbol\
+        \ }}\n{%- endif -%}\n"
   id: 32cc2d958660498e93842682445b04ad
 - alias: Změna venkovní teploty
   trigger:
@@ -45,9 +45,9 @@
       topic: mqtt-weather-display/out-temp
       qos: 1
       retain: true
-      payload: "{%- set out_temp = states.sensor.clientraw_temperature.state -%} {%-\
-        \ if out_temp is not none and out_temp != \"unavailable\" -%}\n  {{ out_temp\
-        \ }}\n{%- endif -%}\n"
+      payload_template: "{%- set out_temp = states.sensor.clientraw_temperature.state\
+        \ -%} {%- if out_temp is not none and out_temp != \"unavailable\" -%}\n  {{\
+        \ out_temp }}\n{%- endif -%}\n"
   id: 77cef5adbf4a44fb8475cdc54d66c668
 - id: 60c871b5e88843a39e057523aed73068
   alias: Notifikace o nové verzi systému
@@ -59,26 +59,23 @@
   - data:
       message: Nová verze systému je k dispozici https://www.home-assistant.io/latest-release-notes/
     service: notify.telegram_pavel
-
 - id: c41e72b8f149484b85cb05c403de657a
   alias: HACS update
   trigger:
     platform: state
     entity_id: sensor.hacs
   condition:
-    - condition: template
-      value_template: "{{ states(trigger.entity_id) != 'unknown'}}"
-    - condition: template
-      value_template: "{{ (states(trigger.entity_id) | float) != 0}}"
+  - condition: template
+    value_template: '{{ states(trigger.entity_id) != ''unknown''}}'
+  - condition: template
+    value_template: '{{ (states(trigger.entity_id) | float) != 0}}'
   action:
     service: notify.telegram_pavel
     data_template:
       title: 'Upgrade balíčků je k dispozici: {{ states.sensor.hacs.state }}x'
-      message: >-
-        {% for repo in state_attr(trigger.entity_id, 'repositories') %}
-          **{{ repo.display_name }}** _{{ repo["installed version"] }}_ -> _{{ repo["available version"] }}_
-        {% endfor %}
-
+      message: "{% for repo in state_attr(trigger.entity_id, 'repositories') %}\n\
+        \  **{{ repo.display_name }}** _{{ repo[\"installed version\"] }}_ -> _{{\
+        \ repo[\"available version\"] }}_\n{% endfor %}"
 - id: a150369fa7be46199c8a5fb39d0daab2
   alias: Hlídání volného místa na disku
   trigger:
@@ -192,18 +189,6 @@
       retain: true
       topic: mqtt-weather-display/night
     service: mqtt.publish
-- id: 5e4aa690354245bd90073ed4346a5b5c
-  alias: Vypnout noční režim
-  trigger:
-  - at: 05:00:00
-    platform: time
-  action:
-  - data:
-      payload: 0
-      qos: 1
-      retain: true
-      topic: mqtt-weather-display/night
-    service: mqtt.publish
 - alias: Zrcadlení lampy v obýváku
   trigger:
   - platform: state
@@ -221,6 +206,7 @@
         %} light.living_room_lamp_button {% endif %}
 
         '
+  id: 5bdc89e0df2641bf92c0426c68faf8c4
 - alias: Zrcadlení světla v obýváku
   trigger:
   - platform: state
@@ -238,6 +224,7 @@
         %} light.living_room_button {% endif %}
 
         '
+  id: eb00554b9e0f4f7b8dc3441dd54e651b
 - alias: Zrcadlení světla v kumbálu
   trigger:
   - platform: state
@@ -255,3 +242,74 @@
         light.hall_shoes_button {% endif %}
 
         '
+  id: e81e544cb0c843d39847e068bc6f3862
+- id: '1579124184208'
+  alias: MQTT spotřeba energie
+  description: ''
+  trigger:
+  - entity_id: sensor.odber_elektriny
+    platform: state
+  condition:
+  - condition: template
+    value_template: '{{ trigger.from_state.state != trigger.to_state.state }}'
+  action:
+  - data:
+      topic: mqtt-weather-display/power
+      qos: 1
+      retain: true
+      payload_template: "{%- set power = states.sensor.odber_elektriny.state -%} {%-\
+        \ if power is not none and power != \"unavailable\" -%}\n  {{ power }}\n{%-\
+        \ endif -%}\n"
+    service: mqtt.publish
+- id: '1579125886545'
+  alias: Displej - noční režim
+  description: ''
+  trigger:
+  - entity_id: binary_sensor.living_occupancy
+    platform: state
+    to: 'off'
+  - at: '22:00'
+    platform: time
+  condition:
+  - condition: state
+    entity_id: sun.sun
+    state: below_horizon
+  - condition: state
+    entity_id: binary_sensor.living_occupancy
+    state: 'off'
+  action:
+  - data:
+      payload: 1
+      qos: 1
+      retain: true
+      topic: mqtt-weather-display/night
+    service: mqtt.publish
+- id: '1579125981276'
+  alias: Displej - normální režim
+  description: ''
+  trigger:
+  - entity_id: binary_sensor.living_occupancy
+    platform: state
+    to: 'on'
+  - event: sunrise
+    platform: sun
+  condition: []
+  action:
+  - data:
+      payload: 0
+      qos: 1
+      retain: true
+      topic: mqtt-weather-display/night
+    service: mqtt.publish
+- id: '1579461668403'
+  alias: 'Notifikace zvonku '
+  description: ''
+  trigger:
+  - entity_id: binary_sensor.zvonek
+    platform: state
+    to: 'on'
+  condition: []
+  action:
+  - data:
+      message: zvonek
+    service: notify.telegram_pavel
